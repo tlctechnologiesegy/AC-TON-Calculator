@@ -153,6 +153,32 @@ button:hover {
     font-style: italic;
 }
 
+.selectors-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.country-select,
+.language-select {
+    flex: 1;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* RTL Support */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] .input-group .unit-label {
+    right: auto;
+    left: 1rem;
+}
+
 @media (min-width: 768px) {
     .form-section {
         display: grid;

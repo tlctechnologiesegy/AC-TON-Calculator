@@ -126,6 +126,138 @@ function calculateEgyptianRate(kWh) {
     return totalCost * exchangeRate;
 }
 
+// Add currency formatting function
+function formatCurrency(amount, country, showBoth = false) {
+    const defaultCurrency = CURRENCY_SETTINGS.US;
+    const targetCurrency = CURRENCY_SETTINGS[country] || defaultCurrency;
+    
+    const localAmount = amount * targetCurrency.rate;
+    const localFormatted = `${targetCurrency.symbol}${localAmount.toFixed(2)}`;
+    
+    if (showBoth && country !== 'US') {
+        return `${localFormatted} (${defaultCurrency.symbol}${amount.toFixed(2)})`;
+    }
+    return localFormatted;
+}
+
+// Update DOM with selected language
+function updateLanguage(lang) {
+    const strings = TRANSLATIONS[lang] || TRANSLATIONS.en;
+    const dir = lang === 'ar' ? 'rtl' : 'ltr';
+    
+    // Set document direction for RTL support
+    document.documentElement.setAttribute('dir', dir);
+    document.documentElement.setAttribute('lang', lang);
+    
+    // Update all text elements
+    document.title = strings.title;
+    document.querySelector('nav h1').textContent = strings.title;
+    
+    // Update selectors labels
+    document.querySelector('.country-select label').textContent = strings.selectCountry;
+    document.querySelector('.language-select label').textContent = strings.selectLanguage;
+    
+    // Update all section headers
+    document.querySelectorAll('.form-section h2').forEach(header => {
+        switch(header.textContent.toLowerCase()) {
+            case 'room dimensions':
+                header.textContent = strings.roomDimensions;
+                break;
+            case 'windows & doors':
+                header.textContent = strings.windows;
+                break;
+            case 'room details':
+                header.textContent = strings.roomDetails;
+                break;
+            case 'temperature settings':
+                header.textContent = strings.tempSettings;
+                break;
+        }
+    });
+
+    // Update all input labels and placeholders
+    const labelMappings = {
+        'length': strings.length,
+        'width': strings.width,
+        'height': strings.height,
+        'floor': strings.floor,
+        'windows': strings.numWindows,
+        'doors': strings.numDoors,
+        'occupants': strings.occupants,
+        'targetTemp': strings.targetTemp,
+        'usageType': strings.usagePeriod
+    };
+
+    // Update labels and placeholders
+    for (const [id, text] of Object.entries(labelMappings)) {
+        const label = document.querySelector(`label[for="${id}"]`);
+        if (label) label.textContent = text;
+        
+        const input = document.getElementById(id);
+        if (input) input.placeholder = text;
+    }
+
+    // Update select options
+    const floorSelect = document.getElementById('floor');
+    if (floorSelect) {
+        floorSelect.options[0].text = strings.selectFloor || 'Select Floor Level';
+        floorSelect.options[1].text = strings.groundFloor || 'Ground Floor';
+        floorSelect.options[2].text = strings.middleFloor || 'Middle Floor';
+        floorSelect.options[3].text = strings.topFloor || 'Top Floor';
+    }
+
+    const sunExposure = document.getElementById('sunExposure');
+    if (sunExposure) {
+        sunExposure.options[0].text = strings.noSun || 'No Direct Sunlight';
+        sunExposure.options[1].text = strings.morningSun || 'Morning Sun';
+        sunExposure.options[2].text = strings.afternoonSun || 'Afternoon Sun';
+        sunExposure.options[3].text = strings.allDaySun || 'All Day Sun';
+    }
+
+    const insulation = document.getElementById('insulation');
+    if (insulation) {
+        insulation.options[0].text = strings.poorInsulation || 'Poor Insulation';
+        insulation.options[1].text = strings.averageInsulation || 'Average Insulation';
+        insulation.options[2].text = strings.goodInsulation || 'Good Insulation';
+    }
+
+    const furniture = document.getElementById('furniture');
+    if (furniture) {
+        furniture.options[0].text = strings.minimalFurniture || 'Minimal Furniture';
+        furniture.options[1].text = strings.woodenFurniture || 'Wooden Furniture';
+        furniture.options[2].text = strings.metalFurniture || 'Metal Furniture';
+        furniture.options[3].text = strings.mixedFurniture || 'Mixed Furniture';
+    }
+
+    const usageType = document.getElementById('usageType');
+    if (usageType) {
+        usageType.options[0].text = strings.sleepTime || 'Sleep Time (11:59 PM - 7:00 AM)';
+        usageType.options[1].text = strings.fullDay || 'Full Day (24 Hours)';
+    }
+
+    // Update calculate button
+    const calculateButton = document.querySelector('button[type="submit"]');
+    if (calculateButton) {
+        calculateButton.textContent = strings.calculate;
+    }
+
+    // Update results section
+    const resultsHeader = document.querySelector('.results h2');
+    if (resultsHeader) {
+        resultsHeader.textContent = strings.results;
+    }
+    
+    const costHeader = document.querySelector('.usage-costs h3');
+    if (costHeader) {
+        costHeader.textContent = strings.energyUsageAndCosts;
+    }
+}
+
+// Language change handler
+document.getElementById('language').addEventListener('change', function(e) {
+    updateLanguage(e.target.value);
+});
+
 // Populate country list when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     const countrySelect = document.getElementById('country');
@@ -142,6 +274,8 @@ document.addEventListener('DOMContentLoaded', function() {
         option.textContent = data.name;
         countrySelect.appendChild(option);
     });
+
+    updateLanguage('en'); // Set default language
 });
 
 // Update units when country changes
@@ -251,38 +385,43 @@ document.getElementById('hvacForm').addEventListener('submit', function(e) {
     const dailyKWh = hourlyKW * 24;
     const dailyCost = calculateCost(dailyKWh, country);
 
+    const lang = document.getElementById('language').value;
+    const strings = TRANSLATIONS[lang] || TRANSLATIONS.en;
+
     // Display results with appropriate units
     document.getElementById('results').style.display = 'block';
     document.getElementById('tonnage').innerHTML = `
-        <strong>Required Tonnage:</strong> ${tons.toFixed(2)} tons<br>
-        <strong>Cooling Capacity:</strong> ${(tons * 3.517).toFixed(2)} kW
+        <strong>${strings.tonnageRequired}:</strong> ${tons.toFixed(2)} tons<br>
+        <strong>${strings.coolingCapacity}:</strong> ${(tons * 3.517).toFixed(2)} kW
     `;
     
     document.getElementById('current').innerHTML = `
-        <strong>Estimated Current Draw:</strong><br>
-        Per minute: ${(current).toFixed(2)} amps<br>
-        Per hour: ${(current * 60).toFixed(2)} amps<br>
-        Per day: ${(current * 1440).toFixed(2)} amps
+        <strong>${strings.currentDraw}:</strong><br>
+        ${strings.perMinute}: ${(current).toFixed(2)} amps<br>
+        ${strings.perHour}: ${(current * 60).toFixed(2)} amps<br>
+        ${strings.perDay}: ${(current * 1440).toFixed(2)} amps
     `;
     
     document.getElementById('daily').innerHTML = `
-        <strong>BTU Load:</strong> ${totalBTU.toFixed(0)} BTU/hr<br>
-        <strong>Kilowatt Load:</strong> ${(totalBTU * 0.000293071).toFixed(2)} kW
+        <strong>${strings.btuLoad}:</strong> ${totalBTU.toFixed(0)} BTU/hr<br>
+        <strong>${strings.kilowattLoad}:</strong> ${(totalBTU * 0.000293071).toFixed(2)} kW
     `;
 
-    document.getElementById('sleepPeriod').innerHTML = `
-        <strong>Sleep Period Usage (${SLEEP_HOURS.START}:00 - ${SLEEP_HOURS.END}:00):</strong><br>
-        Energy Usage: ${sleepPeriodKWh.toFixed(2)} kWh<br>
-        Estimated Cost: $${sleepPeriodCost.toFixed(2)} USD
-        ${country === 'EG' ? '<br><small>(Based on Egyptian tiered pricing)</small>' : ''}
-    `;
-    
+    // Update the display with proper currency formatting
     document.getElementById('energyCost').innerHTML = `
-        <strong>Daily Usage (24 hours):</strong><br>
-        Energy Usage: ${dailyKWh.toFixed(2)} kWh<br>
-        Estimated Cost: $${dailyCost.toFixed(2)} USD<br>
-        ${country === 'EG' ? `<small>Based on Egyptian tiered pricing system</small>` :
-        `<small>Based on ${(ELECTRICITY_RATES[country] || DEFAULT_RATE).toFixed(3)} USD/kWh</small>`}
+        <strong>${strings.dailyUsage}:</strong><br>
+        ${strings.energyUsage}: ${dailyKWh.toFixed(2)} kWh<br>
+        ${strings.estimatedCost}: ${formatCurrency(dailyCost, country, true)}<br>
+        <small>${strings.basedOn} ${country === 'EG' ? strings.egyptianTiers : 
+        formatCurrency(ELECTRICITY_RATES[country] || DEFAULT_RATE, country) + '/kWh'}</small>
+    `;
+
+    // Update sleep period display with local currency
+    document.getElementById('sleepPeriod').innerHTML = `
+        <strong>${strings.sleepPeriod} (${SLEEP_HOURS.START}:00 - ${SLEEP_HOURS.END}:00):</strong><br>
+        ${strings.energyUsage}: ${sleepPeriodKWh.toFixed(2)} kWh<br>
+        ${strings.estimatedCost}: ${formatCurrency(sleepPeriodCost, country, true)}
+        ${country === 'EG' ? `<br><small>(${strings.egyptianTierInfo})</small>` : ''}
     `;
 });
 

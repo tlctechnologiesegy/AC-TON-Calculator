@@ -12,12 +12,30 @@
     </nav>
 
     <div class="container">
-        <div class="country-select">
-            <label for="country">Select Your Country:</label>
-            <select id="country" required>
-                <option value="">Please select your country</option>
-                <!-- Countries will be populated by JavaScript -->
-            </select>
+        <div class="selectors-group">
+            <div class="country-select">
+                <label for="country">Select Your Country:</label>
+                <select id="country" required>
+                    <option value="">Please select your country</option>
+                    <!-- Countries will be populated by JavaScript -->
+                </select>
+            </div>
+            <div class="language-select">
+                <label for="language">Select Language:</label>
+                <select id="language" required>
+                    <option value="en">English</option>
+                    <option value="ar">العربية</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh">中文</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
+                    <option value="hi">हिंदी</option>
+                </select>
+            </div>
         </div>
 
         <form id="hvacForm">
@@ -108,6 +126,7 @@
             </div>
         </div>
     </div>
+    <script src="strings.js"></script>
     <script src="calculator.js"></script>
 </body>
 </html>
