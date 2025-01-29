@@ -77,6 +77,22 @@
                 </select>
             </div>
 
+            <div class="form-section">
+                <h2>Temperature Settings</h2>
+                <div class="input-group">
+                    <label for="targetTemp">Target Temperature:</label>
+                    <input type="number" step="0.5" id="targetTemp" required>
+                    <span class="unit-label" data-imperial="°F" data-metric="°C">°C</span>
+                </div>
+                <div class="input-group">
+                    <label for="usageType">Usage Period:</label>
+                    <select id="usageType">
+                        <option value="sleep">Sleep Time (11:59 PM - 7:00 AM)</option>
+                        <option value="full">Full Day (24 Hours)</option>
+                    </select>
+                </div>
+            </div>
+
             <button type="submit">Calculate Load</button>
         </form>
 
@@ -85,6 +101,11 @@
             <div id="tonnage"></div>
             <div id="current"></div>
             <div id="daily"></div>
+            <div class="usage-costs">
+                <h3>Energy Usage & Costs</h3>
+                <div id="sleepPeriod"></div>
+                <div id="energyCost"></div>
+            </div>
         </div>
     </div>
     <script src="calculator.js"></script>

@@ -128,6 +128,31 @@ button:hover {
     font-size: 0.9rem;
 }
 
+.usage-costs {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+.usage-costs h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+#sleepPeriod, #energyCost {
+    background: #f9f9f9;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+}
+
+#energyCost small {
+    display: block;
+    color: #666;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
 @media (min-width: 768px) {
     .form-section {
         display: grid;
