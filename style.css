@@ -105,18 +105,25 @@ button:hover {
 .input-group {
     position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     margin-bottom: 1rem;
 }
 
-.input-group input {
-    flex: 1;
+.input-group label {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    color: var(--primary-color);
+}
+
+.input-group input,
+.input-group select {
     padding-right: 3rem;
 }
 
-.unit-label {
+.input-group .unit-label {
     position: absolute;
     right: 1rem;
+    bottom: 0.8rem;
     color: #666;
     font-size: 0.9rem;
 }
@@ -126,5 +133,9 @@ button:hover {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
+    }
+
+    .input-group {
+        margin-bottom: 1.5rem;
     }
 }
