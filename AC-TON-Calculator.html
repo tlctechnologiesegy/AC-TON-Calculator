@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AC Tonnage Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="status-bar">
+        <h1>AC Tonnage & Load Calculator</h1>
+    </nav>
+
+    <div class="container">
+        <div class="country-select">
+            <label for="country">Select Your Country:</label>
+            <select id="country" required>
+                <option value="">Please select your country</option>
+                <!-- Countries will be populated by JavaScript -->
+            </select>
+        </div>
+
+        <form id="hvacForm">
+            <div class="form-section">
+                <h2>Room Dimensions</h2>
+                <div class="input-group">
+                    <input type="number" step="0.01" id="length" required>
+                    <span class="unit-label" data-imperial="ft" data-metric="m">ft</span>
+                </div>
+                <div class="input-group">
+                    <input type="number" step="0.01" id="width" required>
+                    <span class="unit-label" data-imperial="ft" data-metric="m">ft</span>
+                </div>
+                <div class="input-group">
+                    <input type="number" step="0.01" id="height" required>
+                    <span class="unit-label" data-imperial="ft" data-metric="m">ft</span>
+                </div>
+                <select id="floor">
+                    <option value="">Select Floor Level</option>
+                    <option value="ground">Ground Floor</option>
+                    <option value="middle">Middle Floor</option>
+                    <option value="top">Top Floor</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <h2>Windows & Doors</h2>
+                <input type="number" placeholder="Number of Windows" id="windows" required>
+                <input type="number" placeholder="Number of Doors" id="doors" required>
+                <select id="sunExposure">
+                    <option value="none">No Direct Sunlight</option>
+                    <option value="morning">Morning Sun</option>
+                    <option value="afternoon">Afternoon Sun</option>
+                    <option value="allday">All Day Sun</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <h2>Room Details</h2>
+                <select id="insulation">
+                    <option value="poor">Poor Insulation</option>
+                    <option value="average">Average Insulation</option>
+                    <option value="good">Good Insulation</option>
+                </select>
+                <input type="number" placeholder="Number of Occupants" id="occupants" required>
+                <select id="furniture">
+                    <option value="minimal">Minimal Furniture</option>
+                    <option value="wooden">Wooden Furniture</option>
+                    <option value="metal">Metal Furniture</option>
+                    <option value="mixed">Mixed Furniture</option>
+                </select>
+            </div>
+
+            <button type="submit">Calculate Load</button>
+        </form>
+
+        <div class="results" id="results">
+            <h2>Calculation Results</h2>
+            <div id="tonnage"></div>
+            <div id="current"></div>
+            <div id="daily"></div>
+        </div>
+    </div>
+    <script src="calculator.js"></script>
+</body>
+</html>
